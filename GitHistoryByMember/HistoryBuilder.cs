@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 using CSharpDom.WithSymbols;
 using CSharpDom.WithSyntax;
 using GitHistoryByMember.Data;
-using LibGit2Sharp;
-using Commit = GitHistoryByMember.Data.Commit;
 
 namespace GitHistoryByMember
 {
@@ -29,10 +27,6 @@ namespace GitHistoryByMember
             fileCommitsByMember = new FileCommitsByMember();
             sourceTextByFileName = new Dictionary<string, SolutionWithSyntax>();
             documentationFiles = new Dictionary<string, XmlDocument>();
-            using (var repo = new Repository(@"C:\Users\beavon\Documents\Visual Studio 2013\Projects\MSTestCaseExtensions"))
-            {
-                var tree = repo.Commits.First().Tree.First();
-            }
         }
 
         public async Task<FileCommitsByMember> BuildHistoryAsync(string solutionFile)
@@ -60,6 +54,7 @@ namespace GitHistoryByMember
                 XmlDocument document = GetDocumentationFile(documentationPath, memberCommits.Key);
                 XmlNode remarksNode = GetRemarksNode(memberCommits.Key, document);
                 XmlNode paraNode = document.CreateElement("para");
+                remarksNode.AppendChild(paraNode);
                 paraNode.AppendChild(document.CreateTextNode("Change History:"));
                 XmlElement listNode = AppendTableList(paraNode, document);
                 foreach (FileCommit fileCommit in memberCommits.Value.OrderByDescending(commit => commit.Commit.Date))

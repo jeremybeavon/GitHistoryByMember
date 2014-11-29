@@ -69,9 +69,9 @@ namespace GitHistoryByMember
             }
         }
 
-        private async Task BuildDocumentationIdsAsync(SolutionWithSymbols solution)
+        private Task BuildDocumentationIdsAsync(SolutionWithSymbols solution)
         {
-            await solution.AcceptAsync(new DocumentationIdBuilder(documentationIds, documentationIdsByProject));
+            return solution.AcceptAsync(new DocumentationIdBuilder(documentationIds, documentationIdsByProject));
         }
 
         private async Task BuildFileCommitsByMemberAsync()
